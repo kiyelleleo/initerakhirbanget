@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kumpulan proyek Informatika saya.">
+  <title>Proyek Informatika Saya</title>
+  <link rel="stylesheet" href="yeh.css">
+</head>
+<body id="top">
+  <a class="skip" href="#koleksi">Lewati ke daftar proyek</a>
+
+  <header class="hero">
+    <nav class="bar">
+      <a class="logo" href="portofolio.html"><span class="mark" aria-hidden="true"></span>Portofolio Saya</a>
+      <a class="back" href="portofolio.html">← Kembali ke Portofolio</a>
+    </nav>
+    <div class="hero-in">
+      <div class="jewel" aria-hidden="true"></div>
+      <p class="kicker">Portofolio pelajar</p>
+      <h1>Proyek Informatika Saya</h1>
+      <p class="lede">Berikut beberapa proyek dan latihan yang saya kerjakan selama belajar pemrograman, elektronika, dan teknologi.</p>
+    </div>
+    <div class="sep" aria-hidden="true"></div>
+  </header>
+
+  <main class="wrap">
+    <section class="intro">
+      <h2>Eksplorasi dan Karya</h2>
+      <p>Setiap proyek menjadi kesempatan untuk belajar memecahkan masalah, mencoba hal baru, dan mengembangkan keterampilan.</p>
+    </section>
+
+    <!-- Filter: id radio (f-...) harus sama dengan data-k pada kartu -->
+    <div class="chips" role="group" aria-label="Filter kategori">
+      <input class="sr-only" type="radio" name="kategori" id="f-semua" checked>
+      <label for="f-semua">Semua</label>
+      <input class="sr-only" type="radio" name="kategori" id="f-web">
+      <label for="f-web">HTML &amp; CSS</label>
+      <input class="sr-only" type="radio" name="kategori" id="f-arduino">
+      <label for="f-arduino">Arduino</label>
+    </div>
+
+    <section class="grid" id="koleksi" aria-label="Daftar proyek Informatika">
+      <article class="gem" data-k="web">
+        <div class="gem-cut"><div class="gem-face">
+          <div class="facets t-sapphire"><span class="orb" aria-hidden="true">🌐</span></div>
+          <div class="gem-body">
+            <p class="cat">HTML &amp; CSS</p>
+            <h3>Website Portofolio</h3>
+            <p class="desc">Membuat website pribadi yang berisi profil, kemampuan akademik, karya, dan informasi kontak.</p>
+            <ul class="tags"><li>HTML</li><li>CSS</li><li>GitHub Pages</li></ul>
+            <a class="go" href="portofolio.html">Lihat hasil proyek ↗</a>
+          </div>
+        </div></div>
+      </article>
+
+      <article class="gem" data-k="arduino">
+        <div class="gem-cut"><div class="gem-face">
+          <div class="facets t-amethyst"><span class="orb" aria-hidden="true">💡</span></div>
+          <div class="gem-body">
+            <p class="cat">Arduino</p>
+            <h3>LED dan Blink</h3>
+            <p class="desc">Mengendalikan LED agar menyala dan mati secara bergantian menggunakan program Arduino.</p>
+            <ul class="tags"><li>Arduino</li><li>LED</li><li>Wokwi</li></ul>
+            <a class="go" href="https://wokwi.com/projects/481715443906320385">Lihat hasil proyek ↗</a>
+          </div>
+        </div></div>
+      </article>
+
+      <article class="gem" data-k="arduino">
+        <div class="gem-cut"><div class="gem-face">
+          <div class="facets t-orchid"><span class="orb" aria-hidden="true">🚦</span></div>
+          <div class="gem-body">
+            <p class="cat">Arduino</p>
+            <h3>Lampu Lalu Lintas</h3>
+            <p class="desc">Membuat simulasi lampu lalu lintas dengan urutan nyala LED merah, kuning, dan hijau.</p>
+            <ul class="tags"><li>Arduino</li><li>LED</li><li>Logika</li></ul>
+            <a class="go" href="https://wokwi.com/projects/481715478241976321">Lihat hasil proyek ↗</a>
+          </div>
+        </div></div>
+      </article>
+
+      <article class="gem" data-k="arduino">
+        <div class="gem-cut"><div class="gem-face">
+          <div class="facets t-rose"><span class="orb" aria-hidden="true">🔤</span></div>
+          <div class="gem-body">
+            <p class="cat">Arduino</p>
+            <h3>Running Text</h3>
+            <p class="desc">Membuat running text dan menampilkannya pada layar LCD.</p>
+            <ul class="tags"><li>Arduino</li><li>Wokwi</li></ul>
+            <a class="go" href="https://wokwi.com/projects/478025326159500289">Lihat hasil proyek ↗</a>
+          </div>
+        </div></div>
+      </article>
+
+      <!-- Tempel kartu proyek lainnya di sini. Warna permata: t-sapphire, t-amethyst, t-orchid,
+           t-rose, t-ice, t-lilac, t-periwinkle, t-plum. Jangan lupa data-k. -->
+    </section>
+
+    <section class="gem note">
+      <div class="gem-cut"><div class="gem-face note-body">
+        <h2>Masih terus belajar</h2>
+        <p>Proyek-proyek ini akan terus bertambah seiring bertambahnya ilmu dan pengalaman.</p>
+      </div></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p><a href="index.html">© 2026 Portofolio Saya</a></p>
+    <p><a href="index.html">Kembali ke Portofolio</a></p>
+  </footer>
+
+  <a class="up" href="#top" aria-label="Kembali ke atas"><span aria-hidden="true">↑</span></a>
+</body>
+</html>
