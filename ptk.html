@@ -7,6 +7,47 @@
   <title>Carminora Theatre | Portofolio Saya</title>
   <link rel="stylesheet" href="yeh.css">
   <link rel="stylesheet" href="ptk.css">
+  <style>
+    /* ===== PROJECT 2: MONOLOGUE (kotak permata + jendela Script dan D-day) =====
+       Hanya menambah kelas baru (mono-*), jadi tampilan roll film Project 1 tidak berubah.
+       Boleh dipindahkan ke paling bawah ptk.css kalau mau. */
+    .intro .kicker { margin: 0 0 4px; max-width: none; color: var(--rose); }   /* label "Project 1" */
+    .mono { max-width: 520px; margin: 0 auto 20px; }
+    .mono-card { position: relative; scroll-margin-top: 20px; }
+    .mono-card .go::after { content: ""; position: absolute; inset: 0; }       /* seluruh kotak bisa diklik */
+    .mono-card .go:hover { transform: none; }
+
+    .mono-view { position: fixed; inset: 0; z-index: 200; display: none; place-items: center; padding: 18px; }
+    .mono-view:target { display: grid; animation: mono-in .25s ease-out; }
+    .mono-view:has(:target) { display: grid; }
+    body:has(.mono-view:target) { overflow: hidden; }
+    body:has(.mono-view :target) { overflow: hidden; }
+    .mono-bg { position: absolute; inset: 0; background: rgba(10, 4, 40, .82); }
+    .mono-panel { position: relative; width: min(720px, 100%); filter: drop-shadow(0 18px 40px rgba(0, 0, 0, .55)); }
+    .mono-scroll { max-height: calc(100vh - 40px); max-height: calc(100dvh - 40px); overflow-y: auto; overscroll-behavior: contain; scroll-behavior: smooth; }
+    .mono-head { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 18px 12px 24px; background: var(--pearl); border-bottom: 2px solid var(--lilac); }
+    .mono-head .cat { margin: 0 0 2px; }
+    .mono-head h3 { margin: 0; font-family: var(--serif); font-weight: 700; font-size: 26px; line-height: 1.1; color: var(--ink); }
+    .mono-x { flex: none; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: var(--lilac); color: var(--indigo); font-weight: 800; text-decoration: none; }
+    .mono-x:hover { background: var(--ice); }
+    .mono-nav { display: flex; gap: 10px; padding: 16px 24px 0; }
+    .mono-nav a { padding: 5px 16px; border: 2px solid var(--ice); border-radius: 999px; color: var(--indigo); font-weight: 800; font-size: 13.5px; text-decoration: none; }
+    .mono-nav a:hover { background: var(--lilac); }
+    .mono-sec { padding: 22px 24px 4px; scroll-margin-top: 84px; }
+    .mono-sec:last-child { padding-bottom: 28px; }
+    .mono-sec h4 { margin: 0 0 12px; font-family: var(--serif); font-weight: 700; font-size: 24px; color: var(--ink); }
+    .mono-sec h4::before { content: "\25C6"; font-size: 10px; margin-right: 10px; color: var(--rose); vertical-align: 3px; }
+    .mono-doc { padding: 18px 20px; border: 2px solid var(--lilac); border-radius: 14px; background: #fff; color: var(--ink); font-size: 15.5px; line-height: 1.75; }
+    .mono-doc p { margin: 0 0 .9em; }
+    .mono-doc p:last-child { margin-bottom: 0; }
+    .mono-sec .go { margin-top: 16px; }
+    .mono-sec img { display: block; width: 100%; max-width: 440px; height: auto; margin: 0 auto; border: 2px solid var(--lilac); border-radius: 14px; }
+    @keyframes mono-in { from { opacity: 0; transform: scale(.97); } }
+    @media (prefers-reduced-motion: reduce) {
+      .mono-view:target { animation: none; }
+      .mono-scroll { scroll-behavior: auto; }
+    }
+  </style>
 </head>
 <body id="top">
   <a class="skip" href="#rolls">Lewati ke roll film</a>
@@ -31,86 +72,142 @@
         </span>
       </label>
       <div class="sparks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-      <p class="kicker">Portofolio pelajar</p>
-      <h1>Carminora Theatre</h1>
-      <p class="lede">Perjalanan kami menuju pertunjukan “Come Back Home”: dari latihan, pemotretan, sampai hari-H, tersusun dalam tiga roll film.</p>
+      <p class="kicker">Portofolio Rakha Syaftha</p>
+      <h1>Carminora Theatre & Monologue </h1>
+      <p class="lede">The most Exciting Project</p>
     </div>
     <div class="sep" aria-hidden="true"></div>
   </header>
 
   <main class="wrap" id="rolls">
     <section class="intro">
-      <h2>Tiga Roll Film</h2>
-      <p>Geser ke samping atau tekan panah di kiri dan kanan untuk berpindah antarframe.</p>
+      <p class="kicker">Project 1</p>
+      <h2>PTK Theater</h2>
+      <p>PTK Project on Roll Film</p>
     </section>
 
-    <!-- ===== ROLL 1: foto & video 1-4 ===== -->
+    <!--
+      Cara kerja tiap roll:
+      - <input class="pull"> adalah saklar tersembunyi (film sudah ditarik atau belum).
+      - <label class="can"> (kaleng) dan <label class="tab"> (area kosong) sama-sama menyalakan saklar itu lewat for="pullN".
+      - data-from="left"  : film keluar dari kiri ke kanan.
+        data-from="right" : film keluar dari kanan ke kiri.
+      - Kalau menambah roll baru, ganti angka id pada input, for pada kedua label, dan aria-labelledby.
+    -->
+
+    <!-- ===== ROLL 1: foto & video 1-4 (keluar dari kiri) ===== -->
     <section class="roll" aria-labelledby="t1">
+      <input class="pull" type="checkbox" role="switch" id="pull1" aria-label="Tarik roll film Preparation and Training">
       <header class="roll-head">
         <p class="kicker">Roll 1</p>
         <h2 id="t1">Preparation and Training</h2>
-        <p>Latihan kami berlangsung di lorong dan aula sekolah: duduk melingkar membahas adegan, berlatih gerak bersama, bermain peran, dan mencoba iringan musik dengan gitar. Rekamannya terentang dari September sampai Desember 2025.</p>
-        <ul class="tags"><li>2 video</li><li>2 foto</li></ul>
+        <p>The Beginning</p>
+        <ul class="tags"><li>Acting</li><li>Choreography</li></ul>
       </header>
-      <div class="film" style="--h:min(440px,112vw)">
-        <button class="nav prev" type="button" aria-label="Frame sebelumnya"><span aria-hidden="true">‹</span></button>
-        <div class="reel" tabindex="0" role="region" aria-label="Roll film Preparation and Training, geser ke samping">
-          <div class="strip">
-            <figure class="frame" style="--r:1080/1920"><video src="20250916_170559_1_1.mp4#t=0.1" controls playsinline preload="metadata" aria-label="Video latihan"></video></figure>
-            <figure class="frame" style="--r:848/480"><video src="VID-20251107-WA0023.mp4#t=0.1" controls playsinline preload="metadata" aria-label="Video latihan gerak bersama di aula"></video></figure>
-            <figure class="frame" style="--r:1080/1796"><img src="Screenshot_20261128_133849_Instagram.jpg" alt="Kolase latihan teater “Practice Makes Perfect”: siswa duduk melingkar, bermain peran, dan bermain gitar" loading="lazy" decoding="async"></figure>
-            <figure class="frame" style="--r:1080/1920"><img src="Screenshot_20261128_133953_Instagram.jpg" alt="Kolase latihan teater pada Senin 8 Desember 2025 dengan tulisan “Practice Makes Perfect”" loading="lazy" decoding="async"></figure>
+      <div class="film" data-from="left" style="--h:min(440px,112vw)">
+        <label class="can" for="pull1" aria-hidden="true"><span class="can-txt"></span></label>
+        <div class="bay">
+          <div class="gate">
+            <div class="reel" tabindex="0" role="region" aria-label="Roll film Preparation and Training, geser ke samping">
+              <div class="strip">
+                <figure class="frame" style="--r:1080/1920"><video src="20250916_170559_1_1.mp4#t=0.1" controls playsinline preload="none" aria-label="Video latihan"></video></figure>
+                <figure class="frame" style="--r:848/480"><video src="VID-20251107-WA0023.mp4#t=0.1" controls playsinline preload="none" aria-label="Video latihan gerak bersama di aula"></video></figure>
+                <figure class="frame" style="--r:1080/1796"><img src="Screenshot_20261128_133849_Instagram.jpg" alt="Kolase latihan teater “Practice Makes Perfect”: siswa duduk melingkar, bermain peran, dan bermain gitar" loading="lazy" decoding="async"></figure>
+                <figure class="frame" style="--r:1080/1920"><img src="Screenshot_20261128_133953_Instagram.jpg" alt="Kolase latihan teater pada Senin 8 Desember 2025 dengan tulisan “Practice Makes Perfect”" loading="lazy" decoding="async"></figure>
+              </div>
+            </div>
           </div>
+          <label class="tab" for="pull1" aria-hidden="true">
+            <span class="chev"><span></span><span></span><span></span></span>
+            <span class="hint">Click</span>
+          </label>
+          <button class="nav prev" type="button" aria-label="Frame sebelumnya"><span aria-hidden="true">‹</span></button>
+          <button class="nav next" type="button" aria-label="Frame berikutnya"><span aria-hidden="true">›</span></button>
         </div>
-        <button class="nav next" type="button" aria-label="Frame berikutnya"><span aria-hidden="true">›</span></button>
       </div>
       <p class="count"></p>
     </section>
 
-    <!-- ===== ROLL 2: foto 5-8 ===== -->
+    <!-- ===== ROLL 2: foto 5-8 (keluar dari kanan) ===== -->
     <section class="roll" aria-labelledby="t2">
+      <input class="pull" type="checkbox" role="switch" id="pull2" aria-label="Tarik roll film Photoshoot">
       <header class="roll-head">
         <p class="kicker">Roll 2</p>
         <h2 id="t2">Photoshoot</h2>
-        <p>Sebelum pemotretan, para pemain berdandan dengan wig, janggut, dan mahkota sesuai karakter masing-masing. Dua frame pertama memperlihatkan suasana di balik layar, dua frame berikutnya hasil akhirnya: poster “Come Back Home” untuk Dog Boy dan Oddities.</p>
-        <ul class="tags"><li>4 foto</li></ul>
+        <p>Best Makeup Theater!!</p>
+        <ul class="tags"><li>Dress Nice!</li></ul>
       </header>
-      <div class="film" style="--h:min(420px,92vw)">
-        <button class="nav prev" type="button" aria-label="Frame sebelumnya"><span aria-hidden="true">‹</span></button>
-        <div class="reel" tabindex="0" role="region" aria-label="Roll film Photoshoot, geser ke samping">
-          <div class="strip">
-            <figure class="frame" style="--r:1057/1079"><img src="Screenshot_20261128_140210_Instagram.jpg" alt="Dua pemain bersiap di balik layar, satu duduk di lantai dengan wig hitam panjang" loading="lazy" decoding="async"></figure>
-            <figure class="frame" style="--r:1055/1080"><img src="Screenshot_20261128_140147_Instagram.jpg" alt="Para pemain berfoto bersama dengan kostum, wig, janggut, dan mahkota sebelum pemotretan" loading="lazy" decoding="async"></figure>
-            <figure class="frame" style="--r:1080/1350"><img src="Screenshot_20261128_133618_Instagram.jpg" alt="Poster “Dog Boy” dari Come Back Home: pemain berjas dengan janggut berbulu" loading="lazy" decoding="async"></figure>
-            <figure class="frame" style="--r:1080/1336"><img src="Screenshot_20261128_133642_Instagram_1.jpg" alt="Poster “Oddities, those unique talents”: lima pemain berkostum berdiri di panggung" loading="lazy" decoding="async"></figure>
+      <div class="film" data-from="right" style="--h:min(420px,92vw)">
+        <label class="can" for="pull2" aria-hidden="true"><span class="can-txt"></span></label>
+        <div class="bay">
+          <div class="gate">
+            <div class="reel" tabindex="0" role="region" aria-label="Roll film Photoshoot, geser ke samping">
+              <div class="strip">
+                <figure class="frame" style="--r:1057/1079"><img src="Screenshot_20261128_140210_Instagram.jpg" alt="Dua pemain bersiap di balik layar, satu duduk di lantai dengan wig hitam panjang" loading="lazy" decoding="async"></figure>
+                <figure class="frame" style="--r:1055/1080"><img src="Screenshot_20261128_140147_Instagram.jpg" alt="Para pemain berfoto bersama dengan kostum, wig, janggut, dan mahkota sebelum pemotretan" loading="lazy" decoding="async"></figure>
+                <figure class="frame" style="--r:1080/1350"><img src="Screenshot_20261128_133618_Instagram.jpg" alt="Poster “Dog Boy” dari Come Back Home: pemain berjas dengan janggut berbulu" loading="lazy" decoding="async"></figure>
+                <figure class="frame" style="--r:1080/1336"><img src="Screenshot_20261128_133642_Instagram.jpg" alt="Poster “Oddities, those unique talents”: lima pemain berkostum berdiri di panggung" loading="lazy" decoding="async"></figure>
+              </div>
+            </div>
           </div>
+          <label class="tab" for="pull2" aria-hidden="true">
+            <span class="chev"><span></span><span></span><span></span></span>
+            <span class="hint">Click</span>
+          </label>
+          <button class="nav prev" type="button" aria-label="Frame sebelumnya"><span aria-hidden="true">‹</span></button>
+          <button class="nav next" type="button" aria-label="Frame berikutnya"><span aria-hidden="true">›</span></button>
         </div>
-        <button class="nav next" type="button" aria-label="Frame berikutnya"><span aria-hidden="true">›</span></button>
       </div>
       <p class="count"></p>
     </section>
 
-    <!-- ===== ROLL 3: foto & video 9-12 ===== -->
+    <!-- ===== ROLL 3: foto & video 9-12 (keluar dari kiri) ===== -->
     <section class="roll" aria-labelledby="t3">
+      <input class="pull" type="checkbox" role="switch" id="pull3" aria-label="Tarik roll film D-Day">
       <header class="roll-head">
         <p class="kicker">Roll 3</p>
         <h2 id="t3">D-Day</h2>
-        <p>Hari pertunjukan tiba. Roll ini berisi foto bersama seluruh tim di panggung aula dan di depan spanduk acara, ditambah dua cuplikan video penampilan di atas panggung.</p>
-        <ul class="tags"><li>2 foto</li><li>2 video</li></ul>
+        <p>Welcome to The Circus👀</p>
+        <ul class="tags"><li>Show Time!!</li><li>We won the night.</li></ul>
       </header>
-      <div class="film" style="--h:min(380px,100vw)">
-        <button class="nav prev" type="button" aria-label="Frame sebelumnya"><span aria-hidden="true">‹</span></button>
-        <div class="reel" tabindex="0" role="region" aria-label="Roll film D-Day, geser ke samping">
-          <div class="strip">
-            <figure class="frame" style="--r:2576/1450"><img src="IMG-20251218-WA0061.jpg" alt="Foto bersama seluruh tim di panggung aula dengan pose hati" loading="lazy" decoding="async"></figure>
-            <figure class="frame" style="--r:2576/1932"><img src="motion_photo_4890712884160276483.jpg" alt="Foto bersama tim berkostum di halaman, di depan spanduk acara" loading="lazy" decoding="async"></figure>
-            <figure class="frame" style="--r:720/1280"><video src="AQMfKbUqRQNhCU3i_0fOmnjkj6bq7JU7IYa5CsalGqnxSMXjMv7m2d1_x8aFpwx3sYnkxFDMmPjHhTT3JRuSsN1ziuf69SvS.mp4#t=0.1" controls playsinline preload="metadata" aria-label="Video penampilan dari arah penonton"></video></figure>
-            <figure class="frame" style="--r:720/1280"><video src="AQNGGo2xZI1A6OEQyrLlKqOkPFKpQ4WGI1f33bF_Ee6t4ell1dy-iNsjlRFzvWEgq0CfRG-r4Zki-w9JiIAjx4pQ8mH_dUxg.mp4#t=0.1" controls playsinline preload="metadata" aria-label="Video penampilan di atas panggung"></video></figure>
+      <div class="film" data-from="left" style="--h:min(380px,100vw)">
+        <label class="can" for="pull3" aria-hidden="true"><span class="can-txt"></span></label>
+        <div class="bay">
+          <div class="gate">
+            <div class="reel" tabindex="0" role="region" aria-label="Roll film D-Day, geser ke samping">
+              <div class="strip">
+                <figure class="frame" style="--r:2576/1450"><img src="IMG-20251218-WA0061.jpg" alt="Foto bersama seluruh tim di panggung aula dengan pose hati" loading="lazy" decoding="async"></figure>
+                <figure class="frame" style="--r:2576/1932"><img src="motion_photo_4890712884160276483.jpg" alt="Foto bersama tim berkostum di halaman, di depan spanduk acara" loading="lazy" decoding="async"></figure>
+                <figure class="frame" style="--r:720/1280"><video src="AQMfKbUqRQNhCU3i_0fOmnjkj6bq7JU7IYa5CsalGqnxSMXjMv7m2d1_x8aFpwx3sYnkxFDMmPjHhTT3JRuSsN1ziuf69SvS.mp4#t=0.1" controls playsinline preload="none" aria-label="Video penampilan dari arah penonton"></video></figure>
+                <figure class="frame" style="--r:720/1280"><video src="AQNGGo2xZI1A6OEQyrLlKqOkPFKpQ4WGI1f33bF_Ee6t4ell1dy-iNsjlRFzvWEgq0CfRG-r4Zki-w9JiIAjx4pQ8mH_dUxg.mp4#t=0.1" controls playsinline preload="none" aria-label="Video penampilan di atas panggung"></video></figure>
+              </div>
+            </div>
           </div>
+          <label class="tab" for="pull3" aria-hidden="true">
+            <span class="chev"><span></span><span></span><span></span></span>
+            <span class="hint">Click</span>
+          </label>
+          <button class="nav prev" type="button" aria-label="Frame sebelumnya"><span aria-hidden="true">‹</span></button>
+          <button class="nav next" type="button" aria-label="Frame berikutnya"><span aria-hidden="true">›</span></button>
         </div>
-        <button class="nav next" type="button" aria-label="Frame berikutnya"><span aria-hidden="true">›</span></button>
       </div>
       <p class="count"></p>
+    </section>
+
+    <!-- ===== PROJECT 2: MONOLOGUE (kotak permata; klik untuk melihat Script dan D-day) ===== -->
+    <section class="mono" aria-label="Project 2: Monologue">
+      <article class="gem mono-card" id="project-2">
+        <div class="gem-cut"><div class="gem-face">
+          <div class="facets t-plum"><span class="orb" aria-hidden="true">🎭</span></div>
+          <div class="gem-body">
+            <p class="cat">Project 2</p>
+            <h3>Monologue</h3>
+            <p class="desc">Pementasan monolog di atas panggung. Buka untuk melihat naskah (Script) dan dokumentasi hari pementasan (D-day).</p>
+            <ul class="tags"><li>Monolog</li><li>Script</li><li>D-day</li></ul>
+            <a class="go" href="#monolog">Lihat hasil proyek ↗</a>
+          </div>
+        </div></div>
+      </article>
     </section>
   </main>
 
@@ -121,12 +218,50 @@
 
   <a class="up" href="#top" aria-label="Kembali ke atas"><span aria-hidden="true">↑</span></a>
 
+  <!-- ===== Jendela Project 2: Script + D-day (dibuka lewat tautan #monolog, tanpa JavaScript) ===== -->
+  <div class="mono-view" id="monolog" role="dialog" aria-modal="true" aria-labelledby="mono-judul">
+    <a class="mono-bg" href="#project-2" aria-label="Tutup"></a>
+    <div class="mono-panel">
+      <div class="gem-cut"><div class="gem-face mono-scroll">
+        <div class="mono-head">
+          <div><p class="cat">Project 2</p><h3 id="mono-judul">Monologue</h3></div>
+          <a class="mono-x" href="#project-2" aria-label="Tutup">✕</a>
+        </div>
+        <nav class="mono-nav" aria-label="Isi proyek"><a href="#mono-script">Script</a><a href="#mono-dday">D-day</a></nav>
+
+        <section class="mono-sec" id="mono-script" aria-labelledby="mono-hs">
+          <h4 id="mono-hs">Script</h4>
+          <div class="mono-doc">
+            <p><strong>Di Sisi Lain</strong></p>
+            <p>Oh Tuhan, mengapa engkau rebut semua kebahagiaan dari kehidupan ku? Mengapa setiap hari-hari yang ku lewati terasa berat? Daripada menunggu keajaiban di esok hari, aku lebih berharap esok hari adalah waktunya ajal menjemput ku. Kehidupan ku yang dulu nya penuh dengan kehangatan, rasa kasih sayang, dan kenyamanan seakan menghilang begitu saja tanpa meninggalkan secercah ruang untuk berharap akan ada hal baik yang datang mengganti segala masalah yang datang secara bertubi-tubi.</p>
+            <p>Saat memutuskan untuk menikah, aku sangat yakin bahwa tidak akan ada masalah yang dapat menyulitkan dan mengancam keharmonisan keluargaku yang sangat ku cintai. Aku merasa sudah menemukan belahan jiwa ku ketika aku bertemu dengan mantan istri ku dan menjalin hubungan selama hampir 5 tahun sebelum aku meyakinkan diri untuk melamar dan meminta restu kepada ayah nya. Saat ayah nya bertanya “Apakah kamu sudah merasa pantas dan mengenal baik putri kesayangan kami?” ucapnya. Saat itu aku sangat percaya diri bahwa aku sudah mengenalnya dengan sangat baik, ia bak penyemangat dan alasan ku untuk hidup selama ini. Secara finansial, aku juga sudah memiliki pekerjaan yang tetap dan dapat menjamin keberlangsungan hidup keluarga ku dan anakku kelak.</p>
+            <p>Setelahnya, kehidupan ku berjalan dengan penuh kebahagiaan. Aku dikaruniai anak perempuan setelah 2 tahun pernikahan kami. Ketika ia akhirnya lari ke dunia, aku adalah orang yang paling bahagia pada hari itu. Dibandingkan dengan segala harta dan kesuksesan di dunia, dikaruniai seorang anak merupakan sebuah kebahagiaan yang tak dapat disandingkan dengan hal lain nya di dunia ini. Aku tak bisa menahan air mata ku ketika akhirnya aku dapat menggendong nya di kedua tangan ku.</p>
+            <p>Aku pikir kehidupanku akan selalu berjalan indah seperti ini, namun suatu ketika aku mendapat kabar yang tak terduga, aku terkena PHK dari tempat kerjaku. Aku bertanya atas dasar apa aku di berhentikan seperti ini? Tapi hasil nya nihil. Kesusahan finansial pun menjadi salah satu faktor memudarnya warna dikehidupan sehari-hari ku. Setiap hari hawa didalam rumah ku tidak lagi terasa seperti biasanya. Istriku pun seakan menutupi suatu hal dari diriku. Aku mencoba mengabaikan nya dan mementingkan anak ku dan keberlangsungan hidup keluarga kecil kami.</p>
+            <p>Pada suatu hari, ketika aku pulang di larut malam setelah hampir seharian penuh mencari pekerjaan aku menemukan bahwa ada sepasang sepatu yang tidak aku ketahui. Aku tidak pernah punya sepatu seperti ini. Aku membuka pintu dan berharap mendapat sambutan dari wanita yang paling aku cintai. Saat aku masuk, yang menantiku bukan lah sambutan yang hangat tetapi fakta bahwa istriku telah membawa pria lain masuk ke dalam rumah kami. Tempat dimana kita menghabiskan waktu bersama kini menjadi tempat dirinya bercumbu dengan pria lain yang ia temui entah dimana.</p>
+            <p>Emosi ku memuncak, aku tidak dapat menahan kemarahan yang ada dalam diriku. Dadaku terasa panas, sesak, dan nafasku terasa berat seakan aku dapat melakukan tindakan yang nekat pada saat itu. Kami bertengkar hebat pada hari itu. Suara kami bergemuruh mengisi seluruh ruangan. Entah bagaimana, pria yang ia bawa kerumah itu juga menghilang dari kediaman kami. Aku menanyakan kejelasan atas semua ini yang tanpa sadar membangunkan putri kami. Ia menangis sangat keras sampai-sampai aku bergegas menghampiri dan menggendongnya dalam pelukanku yang seketika meredakan amarah ku.</p>
+            <p>“Jika kamu ingin mengurus nya, silahkan saja urus dia dengan baik. Aku sudah tidak kuat mengurusnya. Kamu kira uang yang dirimu berikan cukup untuk membelikan sekotak susu untuk dirinya? Apa kamu pikir air susu ku akan selalu keluar tanpa memakan apapun? Apa semua nya cukup dengan keadaan mu saat ini? Lebih baik aku menikah dengan orang yang dapat menjamin kehidupanku. Aku memilihmu hanya karena pada saat itu kamu memiliki segala nya. Tapi sekarang? Bahkan untuk makan di esok hari pun kamu perlu menghitung duit ditabungan mu yang hampir habis itu” Aku hanya bisa terdiam dan sebisa mungkin menutupi telinga putri kami dari suara bentakan istriku.</p>
+            <p>Beberapa hari berselang, istriku menggungat cerai diriku. Dengan segala gugatan yang ia ajukan hampir seluruh harta ku beralih tangan kepada dirinya. Ia hanya meninggalkan ku sedikit dari harta yang ku punya dan hak asuh dari putri kami. Mungkin jika bukan karena nya aku sudah berpikir untuk mengakhiri hidupku sedari lama. Lucu, padahal aku dulu berpikir bahwa mengakhiri hidup tidak akan menyelesaikan segala masalah, tetapi ketika aku mengalami nya sendiri aku selalu berpikir untuk mengakhiri semua nya.</p>
+            <p>Oh Tuhan ku, aku sudah bertahan sejauh ini, apakah akan ada rencana mu untuk memberikan ku kebahagiaan kembali, atau setidak nya menjamin keberlangsungan hidup putri ku yang paling kucintai. Aku sudah berusaha bertahan sejauh ini ya Tuhan. Aku masi mengingat tawa dari seorang kenalan ku yang mengejek ku ketika aku bertanya tentang lowongan pekerjaan</p>
+            <p>“Kerja di PT Manuver aja, Manusia Silver HAHAHA” tawa nya yang penuh dengan ledekan kebahagiaan yang bahkan tak dapat ku tirukan selalu menghantuiku. Ya Tuhan jika memang  semuanya sudah diatur oleh dirimu, mengapa diriku selalu mengalami kesialan di dunia ini ya Tuhan? Apakah aku secara tidak sadar melupakan mu ketika hidup ku penuh dengan kebahagiaan Tuhan. Tolong akhiri saja diriku ini dan berikan putriku kehidupan yang penuh kebahagiaan di sepanjang hidupnya ya Tuhan.</p>
+          </div>
+          <a class="go" href="naskah_kali.docx" download>Unduh dokumen ↓</a>
+        </section>
+
+        <section class="mono-sec" id="mono-dday" aria-labelledby="mono-hd">
+          <h4 id="mono-hd">D-day</h4>
+          <img src="Screenshot_20261128_131205_Instagram.jpg" width="1080" height="1785" loading="lazy" alt="Tiga cuplikan pementasan monolog: seorang siswa berseragam sekolah berdiri, duduk di lantai, lalu menunduk di atas panggung berlampu biru-ungu dengan hiasan gunungan wayang di kedua sisi.">
+        </section>
+      </div></div>
+    </div>
+  </div>
+
   <script>
-    // Tombol kiri/kanan menggeser roll satu frame; geser dengan jari/trackpad tetap berfungsi tanpa skrip ini.
+    // Animasi tarik/gulung dikerjakan CSS (lewat saklar .pull). Skrip ini mengurus sisanya:
+    // tombol kiri/kanan, hitungan frame, memuat foto/video saat film ditarik, dan menghentikan video saat digulung.
     document.querySelectorAll('.film').forEach(function (film) {
-      var reel = film.querySelector('.reel'), frames = film.querySelectorAll('.frame'),
-          prev = film.querySelector('.prev'), next = film.querySelector('.next'),
-          count = film.parentNode.querySelector('.count'), PAD = 16;
+      var roll = film.parentNode, pull = roll.querySelector('.pull'), reel = film.querySelector('.reel'),
+          frames = film.querySelectorAll('.frame'), prev = film.querySelector('.prev'), next = film.querySelector('.next'),
+          count = roll.querySelector('.count'), PAD = 16, dimuat = false, timer;
       function atEnd() { return reel.scrollLeft + reel.clientWidth >= reel.scrollWidth - 2; }
       function now() {
         if (atEnd()) return frames.length - 1;
@@ -147,10 +282,26 @@
         var f = frames[Math.max(0, Math.min(frames.length - 1, n))];
         reel.scrollTo({ left: f.offsetLeft - PAD, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
       }
+      // Foto dan video baru dimuat saat film pertama kali ditarik keluar.
+      function muat() {
+        if (dimuat) return;
+        dimuat = true;
+        film.querySelectorAll('img').forEach(function (i) { i.loading = 'eager'; });
+        film.querySelectorAll('video').forEach(function (v) { v.preload = 'metadata'; v.load(); });
+      }
+      function tarik() {
+        clearTimeout(timer);
+        reel.inert = !pull.checked;                 // film yang masih tersembunyi tidak bisa difokus keyboard
+        if (pull.checked) { muat(); return; }
+        film.querySelectorAll('video').forEach(function (v) { v.pause(); });
+        timer = setTimeout(function () { reel.scrollLeft = 0; }, 900);   // digulung kembali: tarikan berikutnya mulai dari frame 1
+      }
+      pull.addEventListener('change', tarik);
       prev.addEventListener('click', function () { go(now() - 1); });
       next.addEventListener('click', function () { go(now() + 1); });
       reel.addEventListener('scroll', sync, { passive: true });
       window.addEventListener('resize', sync);
+      tarik();
       sync();
     });
     // Hanya satu video yang diputar pada satu waktu.
