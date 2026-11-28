@@ -1,0 +1,71 @@
+/* Halaman Carminora Theatre: tiap tahap berupa roll film. Muat SETELAH yeh.css. */
+
+.jewel-btn { margin-bottom: 22px; }
+.intro { margin-bottom: 40px; }
+
+/* ---------- Penjelasan tiap roll ---------- */
+.roll { margin: 0 0 68px; }
+.roll-head { max-width: 640px; margin: 0 auto 28px; text-align: center; }
+.roll-head .kicker { margin: 0 0 4px; }
+.roll-head h2 { margin: 0 0 10px; font-family: var(--serif); font-weight: 700; font-size: clamp(28px, 7vw, 40px); line-height: 1.12; color: #fff; }
+.roll-head p:not(.kicker) { margin: 0 auto; color: #dccffa; }
+.roll-head .tags { justify-content: center; margin: 16px 0 0; }
+
+/* ---------- Roll film ---------- */
+/* --h (tinggi frame) diatur per roll lewat atribut style; lebar tiap frame = tinggi x rasio asli fotonya (--r) */
+.film { position: relative; max-width: 980px; margin-inline: auto; }
+.reel {
+  position: relative; container-type: inline-size; overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory; scroll-padding-inline: 16px; scrollbar-width: none;
+  border-radius: 12px; background: #100a28;
+  box-shadow: 0 0 0 2px rgba(188, 214, 255, .3), 0 16px 36px rgba(10, 4, 40, .55);
+}
+.reel::-webkit-scrollbar { display: none; }
+.reel:focus-visible { outline: 3px solid var(--rose); outline-offset: 4px; }
+
+/* Lubang sprocket di tepi atas dan bawah film */
+.strip {
+  --hole: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 14'%3E%3Crect x='5' y='1' width='16' height='12' rx='3' fill='%23f1e9ff'/%3E%3C/svg%3E");
+  display: flex; align-items: center; gap: 10px; width: max-content; min-width: 100%;
+  padding: 38px 16px; counter-reset: f;
+  background: var(--hole) 0 10px / 26px 14px repeat-x, var(--hole) 0 calc(100% - 10px) / 26px 14px repeat-x;
+}
+
+/* Satu frame = satu foto/video, ukurannya mengikuti rasio aslinya (tidak dipotong) */
+.frame {
+  --cut-s: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+  position: relative; flex: none; margin: 0; aspect-ratio: var(--r); background: #000;
+  width: min(calc(var(--h) * var(--r)), 86vw);
+  width: min(calc(var(--h) * var(--r)), 100cqw - 34px);
+  clip-path: var(--cut-s); scroll-snap-align: start; counter-increment: f;
+}
+.frame img, .frame video { display: block; width: 100%; height: 100%; object-fit: contain; background: #000; }
+.frame::before {
+  content: counter(f, decimal-leading-zero); position: absolute; z-index: 1; top: 10px; left: 14px;
+  padding: 1px 10px; border-radius: 999px; background: rgba(26, 15, 61, .75); color: #fff;
+  font-weight: 800; font-size: 12px; pointer-events: none;
+}
+
+/* ---------- Tombol kiri & kanan (berlian, seperti tombol "kembali ke atas") ---------- */
+.nav {
+  position: absolute; z-index: 2; top: 50%; width: 46px; height: 46px; margin-top: -23px; padding: 0;
+  display: grid; place-items: center; cursor: pointer;
+  border: 2px solid #fff; border-radius: 12px; color: #fff; font: 800 26px/1 var(--sans);
+  background: linear-gradient(135deg, var(--sapphire), var(--violet));
+  box-shadow: 0 8px 20px rgba(10, 4, 40, .45), 0 0 16px rgba(188, 214, 255, .6);
+  transform: rotate(45deg); transition: opacity .2s ease, box-shadow .2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav span { transform: rotate(-45deg); margin-top: -3px; }
+.prev { left: 12px; }
+.next { right: 12px; }
+.nav:hover:not(:disabled) { box-shadow: 0 8px 20px rgba(10, 4, 40, .45), 0 0 0 4px rgba(188, 214, 255, .35), 0 0 22px rgba(240, 138, 192, .6); }
+.nav:disabled { opacity: .3; cursor: default; }
+.nav:focus-visible { outline: 3px solid var(--rose); outline-offset: 4px; }
+
+.count { margin: 16px 0 0; text-align: center; font-weight: 800; font-size: 14px; letter-spacing: .06em; color: var(--ice); }
+.roll:last-child { margin-bottom: 20px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .nav { transition: none; }
+}
