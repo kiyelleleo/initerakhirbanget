@@ -1,9 +1,7 @@
 /* Tambahan untuk halaman NSDC Debate. Muat SETELAH yeh.css. */
 
-.hero .tags { justify-content: center; margin: 18px 0 0; }
-
 /* Foto di dalam kartu permata (menggantikan area .facets) */
-.shot { margin: 0; aspect-ratio: 4 / 3; overflow: hidden; background: var(--lilac); }
+.shot { position: relative; margin: 0; aspect-ratio: 4 / 3; overflow: hidden; background: var(--lilac); }
 .shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
 /* Tangkapan layar hasil: tampil utuh, tidak dipotong */
@@ -24,7 +22,55 @@
 @media (min-width: 720px) {
   .duo { grid-template-columns: 4fr 3fr; }
   /* Foto kedua mengikuti tinggi foto pertama */
-  .duo .shot:nth-child(2) { position: relative; aspect-ratio: auto; }
+  .duo .shot:nth-child(2) { aspect-ratio: auto; }
   .duo .shot:nth-child(2) img { position: absolute; inset: 0; }
   .shot.flat { padding: 20px 24px; }
+}
+
+.intro { margin-bottom: 30px; }
+
+/* Lambang di hero + lambang kecil di kartu proyek */
+.jewel-btn { margin-bottom: 22px; }
+.jewel-btn .g, .orb .g { animation: gem-float 3.2s ease-in-out infinite; }
+.jewel-btn .g:nth-child(2), .orb .g:nth-child(2) { animation-delay: -1.1s; }
+.jewel-btn .g:nth-child(3), .orb .g:nth-child(3) { animation-delay: -2.2s; }
+@keyframes gem-float { 50% { transform: translateY(-3px); } }
+
+/* ---------- Daftar proyek: kartu + isi yang terbuka di bawahnya (tanpa JavaScript) ---------- */
+.stack { display: grid; gap: 32px; margin-bottom: 40px; }
+.proyek > .gem { max-width: 520px; margin-inline: auto; }
+.facets .orb svg { display: block; width: 46px; height: auto; }
+
+/* Tombol buka/tutup adalah <label> untuk radio tersembunyi */
+.go { cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
+.go-tutup, .go-alt { background: linear-gradient(135deg, var(--violet), var(--rose)); }
+.go-tutup { display: none; }
+
+.panel { display: none; margin-top: 30px; }
+.panel::before { content: ""; display: block; width: 44px; height: 41px; margin: 0 auto 26px; background: var(--gems) center / contain no-repeat; filter: drop-shadow(0 0 8px rgba(188, 214, 255, .8)); }
+.panel .note { margin: 36px 0 0; }
+.panel .strip:last-child { margin-bottom: 0; }
+.panel-end { margin: 30px 0 0; text-align: center; }
+
+/* Radio .proyek > input yang tercentang = proyek yang terbuka (#p0 = semua tertutup) */
+.proyek > input:checked ~ .gem .go-buka { display: none; }
+.proyek > input:checked ~ .gem .go-tutup { display: inline-flex; }
+.proyek > input:checked ~ .panel { display: block; animation: buka .45s ease-out both; }
+.proyek > input:focus-visible ~ .gem .go { outline: 3px solid var(--rose); outline-offset: 3px; }
+@keyframes buka { from { opacity: 0; transform: translateY(-14px); } }
+
+/* Susunan foto proyek 2 & 3: tiap baris tingginya sama, foto tampil utuh sesuai rasio aslinya */
+.strip { display: grid; gap: 28px; margin-bottom: 28px; }
+.solo { max-width: 420px; margin-inline: auto; }
+.orb.pin { position: absolute; top: 12px; left: 12px; width: 44px; height: 44px; font-size: 22px; }
+.cap { height: auto; padding: 18px 20px; text-align: center; }
+.cap h3 { margin: 0; font-size: 24px; }
+@media (min-width: 720px) {
+  .s1 { grid-template-columns: minmax(0, 1fr) minmax(0, 2.67fr); }
+  .s2 { grid-template-columns: minmax(0, 1fr) minmax(0, .75fr); max-width: 840px; margin-inline: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jewel-btn .g, .orb .g { animation: none; }
+  .panel { animation: none !important; }
 }
