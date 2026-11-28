@@ -12,16 +12,71 @@
 .roll-head .tags { justify-content: center; margin: 16px 0 0; }
 
 /* ---------- Roll film ---------- */
-/* --h (tinggi frame) diatur per roll lewat atribut style; lebar tiap frame = tinggi x rasio asli fotonya (--r) */
-.film { position: relative; max-width: 980px; margin-inline: auto; }
+/* Susunan tiap roll:
+     .pull  kotak centang tersembunyi = "film sudah ditarik atau belum"
+     .film  = .can (kaleng film di tepi) + .bay (ruang tempat film keluar)
+   Mengetuk .can atau .tab mencentang .pull, lalu CSS menarik film keluar dari kaleng
+   (diketuk lagi = digulung kembali). Bagian ini tetap jalan tanpa JavaScript.
+   data-from="left"  -> film keluar dari kiri ke kanan
+   data-from="right" -> film keluar dari kanan ke kiri
+   --h (tinggi frame) diatur per roll lewat atribut style; lebar tiap frame = tinggi x rasio asli fotonya (--r) */
+.pull { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* --peek = panjang ujung film kosong (leader) yang menyembul dari kaleng saat tertutup */
+.film { --peek: 76px; --shade: 90deg; position: relative; display: flex; align-items: stretch; max-width: 980px; margin-inline: auto; }
+.film[data-from="right"] { flex-direction: row-reverse; --shade: 270deg; }
+
+/* Kaleng film di tepi kiri atau kanan; di sinilah film keluar */
+.can {
+  position: relative; z-index: 3; flex: none; width: 42px; display: grid; place-items: center; cursor: pointer;
+  border: 2px solid #fff; border-radius: 12px 4px 4px 12px;
+  background:
+    linear-gradient(#1d1347, #1d1347) top / 100% 18px no-repeat,
+    linear-gradient(#1d1347, #1d1347) bottom / 100% 18px no-repeat,
+    linear-gradient(var(--shade), rgba(10, 4, 40, .5), rgba(255, 255, 255, .28) 30%, rgba(255, 255, 255, 0) 55%, rgba(10, 4, 40, .45)),
+    linear-gradient(180deg, var(--sapphire), var(--violet));
+  box-shadow: 0 8px 20px rgba(10, 4, 40, .45), 0 0 16px rgba(188, 214, 255, .5);
+  transition: filter .2s ease;
+  user-select: none; -webkit-user-select: none; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.film[data-from="right"] .can { border-radius: 4px 12px 12px 4px; }
+.can:hover { filter: brightness(1.12); }
+.pull:focus-visible ~ .film .can { outline: 3px solid var(--rose); outline-offset: 4px; }
+/* Celah tempat film keluar */
+.can::after { content: ""; position: absolute; top: 12px; bottom: 12px; width: 6px; border-radius: 3px; background: #06020f; box-shadow: 0 0 0 1px rgba(188, 214, 255, .55), 0 0 14px rgba(188, 214, 255, .6); }
+.film[data-from="left"] .can::after { right: -5px; }
+.film[data-from="right"] .can::after { left: -5px; }
+/* Tulisan di badan kaleng berubah sesuai keadaan film */
+.can-txt { writing-mode: vertical-rl; font: 800 12px/1 var(--sans); letter-spacing: .14em; color: #fff; text-shadow: 0 1px 8px rgba(10, 4, 40, .7); white-space: nowrap; }
+.film[data-from="left"] .can-txt { transform: rotate(180deg); }
+.can-txt::before { content: "Tarik film"; }
+.pull:checked ~ .film .can-txt::before { content: "Gulung kembali"; }
+
+/* Ruang film: gelap dan kosong saat tertutup, jadi bingkai film saat film keluar */
+.bay {
+  position: relative; flex: 1; min-width: 0; border-radius: 4px 12px 12px 4px; background: rgba(16, 10, 40, .5);
+  box-shadow: 0 0 0 2px rgba(188, 214, 255, .16), 0 16px 36px rgba(10, 4, 40, 0);
+  transition: background-color .7s ease, box-shadow .7s ease;
+}
+.film[data-from="right"] .bay { border-radius: 12px 4px 4px 12px; }
+.pull:checked ~ .film .bay { background: #100a28; box-shadow: 0 0 0 2px rgba(188, 214, 255, .3), 0 16px 36px rgba(10, 4, 40, .55); }
+
+/* Jendela: memotong bagian film yang masih berada di dalam kaleng */
+.gate { overflow: hidden; border-radius: inherit; isolation: isolate; }
+
 .reel {
   position: relative; container-type: inline-size; overflow-x: auto; overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory; scroll-padding-inline: 16px; scrollbar-width: none;
-  border-radius: 12px; background: #100a28;
-  box-shadow: 0 0 0 2px rgba(188, 214, 255, .3), 0 16px 36px rgba(10, 4, 40, .55);
+  border-radius: inherit; background: #100a28;
+  /* tertutup: film masuk ke kaleng, hanya ujung kosongnya yang menyembul */
+  transform: translateX(calc(var(--peek) - 100%));
+  transition: transform .8s cubic-bezier(.65, 0, .35, 1);
 }
+.film[data-from="right"] .reel { transform: translateX(calc(100% - var(--peek))); }
+/* ditarik keluar: meluncur cepat lalu melambat di ujung */
+.pull:checked ~ .film .reel { transform: none; transition-duration: 1s; transition-timing-function: cubic-bezier(.2, .8, .2, 1); }
 .reel::-webkit-scrollbar { display: none; }
-.reel:focus-visible { outline: 3px solid var(--rose); outline-offset: 4px; }
+.reel:focus-visible { outline: 3px solid var(--rose); outline-offset: -6px; }
 
 /* Lubang sprocket di tepi atas dan bawah film */
 .strip {
@@ -38,13 +93,36 @@
   width: min(calc(var(--h) * var(--r)), 86vw);
   width: min(calc(var(--h) * var(--r)), 100cqw - 34px);
   clip-path: var(--cut-s); scroll-snap-align: start; counter-increment: f;
+  /* tersembunyi sampai film ditarik; saat digulung kembali, memudar dulu baru disembunyikan */
+  opacity: 0; visibility: hidden; transition: opacity .35s ease .25s, visibility 0s linear .6s;
 }
+.pull:checked ~ .film .frame { opacity: 1; visibility: visible; transition: opacity .6s ease .15s, visibility 0s; }
 .frame img, .frame video { display: block; width: 100%; height: 100%; object-fit: contain; background: #000; }
 .frame::before {
   content: counter(f, decimal-leading-zero); position: absolute; z-index: 1; top: 10px; left: 14px;
   padding: 1px 10px; border-radius: 999px; background: rgba(26, 15, 61, .75); color: #fff;
   font-weight: 800; font-size: 12px; pointer-events: none;
 }
+
+/* Penutup di atas ruang film saat tertutup: area ketuk + petunjuk arah tarikan */
+.tab {
+  position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+  padding: 0 18px; border-radius: inherit; text-align: center; cursor: pointer;
+  user-select: none; -webkit-user-select: none; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  transition: opacity .4s ease .6s, visibility 0s linear .6s;
+}
+.film[data-from="left"] .tab { padding-left: calc(var(--peek) + 18px); }
+.film[data-from="right"] .tab { padding-right: calc(var(--peek) + 18px); }
+.pull:checked ~ .film .tab { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .25s ease, visibility 0s linear .25s; }
+.hint { max-width: 200px; font-weight: 800; font-size: 15px; line-height: 1.4; color: var(--ice); text-wrap: balance; }
+/* Tiga panah yang menyala bergantian searah tarikan */
+.chev { display: flex; gap: 10px; }
+.film[data-from="right"] .chev { flex-direction: row-reverse; }
+.chev span { display: block; width: 14px; height: 14px; border: solid var(--rose); border-width: 3px 3px 0 0; transform: rotate(45deg); opacity: .25; animation: tarik 1.5s ease-in-out infinite; }
+.film[data-from="right"] .chev span { transform: rotate(-135deg); }
+.chev span:nth-child(2) { animation-delay: .2s; }
+.chev span:nth-child(3) { animation-delay: .4s; }
+@keyframes tarik { 50% { opacity: 1; } }
 
 /* ---------- Tombol kiri & kanan (berlian, seperti tombol "kembali ke atas") ---------- */
 .nav {
@@ -53,7 +131,7 @@
   border: 2px solid #fff; border-radius: 12px; color: #fff; font: 800 26px/1 var(--sans);
   background: linear-gradient(135deg, var(--sapphire), var(--violet));
   box-shadow: 0 8px 20px rgba(10, 4, 40, .45), 0 0 16px rgba(188, 214, 255, .6);
-  transform: rotate(45deg); transition: opacity .2s ease, box-shadow .2s ease;
+  transform: rotate(45deg); transition: opacity .2s ease, visibility 0s linear .2s, box-shadow .2s ease;
   -webkit-tap-highlight-color: transparent;
 }
 .nav span { transform: rotate(-45deg); margin-top: -3px; }
@@ -62,10 +140,17 @@
 .nav:hover:not(:disabled) { box-shadow: 0 8px 20px rgba(10, 4, 40, .45), 0 0 0 4px rgba(188, 214, 255, .35), 0 0 22px rgba(240, 138, 192, .6); }
 .nav:disabled { opacity: .3; cursor: default; }
 .nav:focus-visible { outline: 3px solid var(--rose); outline-offset: 4px; }
+/* tombol baru muncul setelah film hampir selesai keluar */
+.pull:not(:checked) ~ .film .nav { opacity: 0; visibility: hidden; pointer-events: none; }
+.pull:checked ~ .film .nav { animation: muncul .4s ease .75s backwards; }
+@keyframes muncul { from { opacity: 0; } }
 
-.count { margin: 16px 0 0; text-align: center; font-weight: 800; font-size: 14px; letter-spacing: .06em; color: var(--ice); }
+.count { margin: 16px 0 0; text-align: center; font-weight: 800; font-size: 14px; letter-spacing: .06em; color: var(--ice); transition: opacity .4s ease .7s, visibility 0s linear .7s; }
+.pull:not(:checked) ~ .count { opacity: 0; visibility: hidden; transition: none; }
 .roll:last-child { margin-bottom: 20px; }
 
 @media (prefers-reduced-motion: reduce) {
-  .nav { transition: none; }
+  .can, .bay, .reel, .frame, .tab, .nav, .count { transition: none !important; }
+  .nav { animation: none !important; }
+  .chev span { animation: none !important; opacity: .7; }
 }
