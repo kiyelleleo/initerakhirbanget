@@ -1,4 +1,4 @@
-/* Halaman Carminora Theatre: tiap tahap berupa roll film. Muat SETELAH yeh.css. */
+
 
 .jewel-btn { margin-bottom: 22px; }
 .intro { margin-bottom: 40px; }
@@ -26,7 +26,7 @@
 .film { --peek: 76px; --shade: 90deg; position: relative; display: flex; align-items: stretch; max-width: 980px; margin-inline: auto; }
 .film[data-from="right"] { flex-direction: row-reverse; --shade: 270deg; }
 
-/* Kaleng film di tepi kiri atau kanan; di sinilah film keluar */
+
 .can {
   position: relative; z-index: 3; flex: none; width: 42px; display: grid; place-items: center; cursor: pointer;
   border: 2px solid #fff; border-radius: 12px 4px 4px 12px;
